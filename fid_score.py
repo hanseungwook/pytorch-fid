@@ -222,7 +222,8 @@ def _compute_statistics_of_path(path, model, batch_size, dims, cuda):
         dataset = f.get('data')
         
         # Shuffle dataset
-        dataset = np.random.shuffle(np.array(dataset))
+        dataset = np.array(dataset)
+        dataset = np.random.shuffle(dataset)
 
         m, s = calculate_activation_statistics(dataset, model, batch_size,
                                                dims, cuda)
