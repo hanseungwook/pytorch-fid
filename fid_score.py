@@ -96,14 +96,16 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
     """
     model.eval()
 
-    if batch_size > len(dataset):
-        print(('Warning: batch size is bigger than the data size. '
-               'Setting batch size to data size'))
-        batch_size = len(dataset)
+    # if batch_size > len(dataset):
+    #     print(('Warning: batch size is bigger than the data size. '
+    #            'Setting batch size to data size'))
+    #     batch_size = len(dataset)
 
-    pred_arr = np.empty((len(dataset), dims))
+    # pred_arr = np.empty((len(dataset), dims))
 
-    for i in tqdm(range(0, len(dataset), batch_size)):
+    pred_arr = np.empty(dataset.shape[0], dims)
+
+    for i in tqdm(range(0, dataset.shape[0], batch_size)):
         start = i
         end = i + batch_size
 
