@@ -40,6 +40,7 @@ import numpy as np
 import torch
 from scipy import linalg
 from torch.nn.functional import adaptive_avg_pool2d
+import h5py
 
 from PIL import Image
 
@@ -53,7 +54,7 @@ from inception import InceptionV3
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument('path', type=str, nargs=2,
-                    help=('Path to the generated images or '
+                    help=('Path to hdf5 files or '
                           'to .npz statistic files'))
 parser.add_argument('--batch-size', type=int, default=50,
                     help='Batch size to use')
@@ -72,7 +73,7 @@ def imread(filename):
     return np.asarray(Image.open(filename), dtype=np.uint8)[..., :3]
 
 
-def get_activations(files, model, batch_size=50, dims=2048,
+def get_activations(dataset, model, batch_size=50, dims=2048,
                     cuda=False, verbose=False):
     """Calculates the activations of the pool_3 layer for all images.
 
@@ -95,26 +96,18 @@ def get_activations(files, model, batch_size=50, dims=2048,
     """
     model.eval()
 
-    if batch_size > len(files):
+    if batch_size > len(dataset):
         print(('Warning: batch size is bigger than the data size. '
                'Setting batch size to data size'))
-        batch_size = len(files)
+        batch_size = len(dataset)
 
-    pred_arr = np.empty((len(files), dims))
+    pred_arr = np.empty((len(dataset), dims))
 
-    for i in tqdm(range(0, len(files), batch_size)):
-        if verbose:
-            print('\rPropagating batch %d/%d' % (i + 1, n_batches),
-                  end='', flush=True)
+    for i in tqdm(range(0, len(dataset), batch_size)):
         start = i
         end = i + batch_size
 
-        images = np.array([imread(str(f)).astype(np.float32)
-                           for f in files[start:end]])
-
-        # Reshape to (n_images, 3, height, width)
-        images = images.transpose((0, 3, 1, 2))
-        images /= 255
+        images = dataset[start:end]
 
         batch = torch.from_numpy(images).type(torch.FloatTensor)
         if cuda:
@@ -223,9 +216,10 @@ def _compute_statistics_of_path(path, model, batch_size, dims, cuda):
         m, s = f['mu'][:], f['sigma'][:]
         f.close()
     else:
-        path = pathlib.Path(path)
-        files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
-        m, s = calculate_activation_statistics(files, model, batch_size,
+        f = h5py.File(path, 'r')
+        dataset = f.get('data')
+
+        m, s = calculate_activation_statistics(dataset, model, batch_size,
                                                dims, cuda)
 
     return m, s
