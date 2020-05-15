@@ -218,6 +218,9 @@ def _compute_statistics_of_path(path, model, batch_size, dims, cuda):
     else:
         f = h5py.File(path, 'r')
         dataset = f.get('data')
+        
+        # Shuffle dataset
+        dataset = np.random.shuffle(dataset)
 
         m, s = calculate_activation_statistics(dataset, model, batch_size,
                                                dims, cuda)
