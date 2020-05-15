@@ -65,7 +65,7 @@ date
 
 python fid_score.py \
 $HOME2/wtvae/results/unet_128_eval/train/recon_img.hdf5 $HOME2/wtvae/results/unet_128_eval/train/real_img.hdf5 \
---batch_size 100 --gpu 0 
+--batch-size 100 --gpu 0 
 
 echo "Run completed at:- "
 date
