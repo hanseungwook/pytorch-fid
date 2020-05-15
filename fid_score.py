@@ -103,7 +103,7 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
 
     # pred_arr = np.empty((len(dataset), dims))
 
-    pred_arr = np.empty(dataset.shape[0], dims)
+    pred_arr = np.empty((dataset.shape[0], dims))
 
     for i in tqdm(range(0, dataset.shape[0], batch_size)):
         start = i
