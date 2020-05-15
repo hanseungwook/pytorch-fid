@@ -64,7 +64,7 @@ date
 ###  outputs are in  multi_torch_<jobnum>.out and multi_torch_<jobnum>.err 
 
 python fid_score.py \
-$HOME2/wtvae/results/unet_128_eval/train/recon_img.hdf5 $HOME2/wtvae/results/unet_128_eval/train/real_img.hdf5 \
+$HOME2/wtvae/results/unet_128_eval/valid/recon_img.hdf5 $HOME2/wtvae/results/unet_128_eval/valid/real_img.hdf5 \
 --batch-size 100 --gpu 0 
 
 echo "Run completed at:- "
