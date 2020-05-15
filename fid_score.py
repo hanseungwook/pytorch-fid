@@ -96,16 +96,16 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
     """
     model.eval()
 
-    # if batch_size > len(dataset):
-    #     print(('Warning: batch size is bigger than the data size. '
-    #            'Setting batch size to data size'))
-    #     batch_size = len(dataset)
+    if batch_size > len(dataset):
+        print(('Warning: batch size is bigger than the data size. '
+               'Setting batch size to data size'))
+        batch_size = len(dataset)
 
-    # pred_arr = np.empty((len(dataset), dims))
+    pred_arr = np.empty((len(dataset), dims))
 
-    pred_arr = np.empty((dataset.shape[0], dims))
+    # pred_arr = np.empty((dataset.shape[0], dims))
 
-    for i in tqdm(range(0, dataset.shape[0], batch_size)):
+    for i in tqdm(range(0, len(dataset), batch_size)):
         start = i
         end = i + batch_size
 
@@ -222,8 +222,8 @@ def _compute_statistics_of_path(path, model, batch_size, dims, cuda):
         dataset = f.get('data')
         
         # Shuffle dataset
-        dataset = np.array(dataset)
-        np.random.shuffle(dataset)
+        # dataset = np.array(dataset)
+        # np.random.shuffle(dataset)
 
         m, s = calculate_activation_statistics(dataset, model, batch_size,
                                                dims, cuda)
