@@ -38,6 +38,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 import numpy as np
 import torch
+import torchvision.transforms as transforms
 from scipy import linalg
 from torch.nn.functional import adaptive_avg_pool2d
 import h5py
@@ -105,6 +106,10 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
 
     # pred_arr = np.empty((dataset.shape[0], dims))
 
+    preprocess = transforms.Compose([
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+
     for i in tqdm(range(0, len(dataset), batch_size)):
         start = i
         end = i + batch_size
@@ -114,6 +119,7 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
         batch = torch.from_numpy(images).type(torch.FloatTensor)
         if cuda:
             batch = batch.cuda()
+        batch = preprocess(batch)
 
         pred = model(batch)[0]
 
