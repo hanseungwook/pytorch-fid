@@ -106,9 +106,9 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
 
     # pred_arr = np.empty((dataset.shape[0], dims))
 
-    preprocess = transforms.Compose([
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
+    # preprocess = transforms.Compose([
+    #     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    # ])
 
     for i in tqdm(range(0, len(dataset), batch_size)):
         start = i
@@ -119,7 +119,7 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
         batch = torch.from_numpy(images).type(torch.FloatTensor)
         if cuda:
             batch = batch.cuda()
-        batch = preprocess(batch)
+        # batch = preprocess(batch)
 
         pred = model(batch)[0]
 
