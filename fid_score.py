@@ -66,6 +66,29 @@ parser.add_argument('--dims', type=int, default=2048,
 parser.add_argument('-c', '--gpu', default='', type=str,
                     help='GPU to use (leave blank for CPU only)')
 
+def normalize(data, range=False, scale_each=False):
+    data = data.clone()  # avoid modifying tensor in-place
+    if range is not None:
+        assert isinstance(range, tuple), \
+            "range has to be a tuple (min, max) if specified. min and max are numbers"
+
+    def norm_ip(img, min, max):
+        img.clamp_(min=min, max=max)
+        img.add_(-min).div_(max - min + 1e-5)
+
+    def norm_range(t, range):
+        if range is not None:
+            norm_ip(t, range[0], range[1])
+        else:
+            norm_ip(t, float(t.min()), float(t.max()))
+
+    if scale_each is True:
+        for t in data:  # loop over mini-batch dimension
+            norm_range(t, range)
+    else:
+        norm_range(data, range)
+
+    return data
 
 def imread(filename):
     """
@@ -115,6 +138,7 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
         end = i + batch_size
 
         images = dataset[start:end]
+        images = normalize(images)
 
         batch = torch.from_numpy(images).type(torch.FloatTensor)
         if cuda:
