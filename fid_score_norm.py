@@ -114,7 +114,7 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
 
     # Load norm values
     norm_dict = np.load('/nobackup/users/swhan/BigGAN-PyTorch/WT64_norm_values.npz')
-    shift, scale = torch.from_numpy(norm_dict['shift']), torch.from_numpy(norm_dict['scale'])
+    shift, scale = norm_dict['shift'], norm_dict['scale']
 
     for i in tqdm(range(0, len(dataset), batch_size)):
         start = i
