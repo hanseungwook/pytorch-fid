@@ -138,9 +138,9 @@ def get_activations(dataset, model, batch_size=50, dims=2048,
         end = i + batch_size
 
         images = dataset[start:end]
-        images = normalize(images)
 
         batch = torch.from_numpy(images).type(torch.FloatTensor)
+        images = normalize(images)
         if cuda:
             batch = batch.cuda()
         # batch = preprocess(batch)
