@@ -276,9 +276,9 @@ def calculate_fid_given_paths(paths, batch_size, cuda, dims):
         model.cuda()
 
     m1, s1 = _compute_statistics_of_path(paths[0], model, batch_size,
-                                         dims, cuda, normalize=True)
+                                         dims, cuda, normalize=False)
     m2, s2 = _compute_statistics_of_path(paths[1], model, batch_size,
-                                         dims, cuda)
+                                         dims, cuda, normalize=False)
     fid_value = calculate_frechet_distance(m1, s1, m2, s2)
 
     return fid_value
