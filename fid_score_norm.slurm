@@ -9,7 +9,7 @@
 #SBATCH -o calc_fid_%j.out
 #SBATCH -e calc_fid_%j.err
 
-#SBATCH --mail-user=seungwook.han@ibm.com
+#SBATCH --mail-user=churwitz@mit.edu
 #SBATCH --mail-type=ALL
 ###  the following parameters will get you two nodes with 4 V100's each
 ###  note the run time limit is currently only 12 hours, it will be increased
@@ -24,7 +24,7 @@
 
 ## User python environment
 HOME2=/nobackup/users/$(whoami)
-PYTHON_VIRTUAL_ENVIRONMENT=wmlce-ea
+PYTHON_VIRTUAL_ENVIRONMENT=ml_gpu
 CONDA_ROOT=$HOME2/anaconda3
 
 ## Activate WMLCE virtual environment 
@@ -64,7 +64,7 @@ date
 ###  outputs are in  multi_torch_<jobnum>.out and multi_torch_<jobnum>.err 
 
 python fid_score_norm.py \
-$HOME2/wtvae/results/unet_128_eval/valid/recon_img.hdf5 $HOME2/wtvae/results/unet_128_eval/valid/real_img.hdf5 \
+$HOME2/UNET/results/unet_128_256_eval_1/valid/recon_img.hdf5 $HOME2/UNET/results/unet_128_256_eval_1/valid/real_img.hdf5 \
 --batch-size 100 --gpu 0 
 
 echo "Run completed at:- "
