@@ -20,14 +20,14 @@
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=500g
 #SBATCH --time=24:00:00
-#SBATCH -p sched_system_all 
+#SBATCH -p sched_system_all
 
 ## User python environment
 HOME2=/nobackup/users/$(whoami)
 PYTHON_VIRTUAL_ENVIRONMENT=ml_gpu
 CONDA_ROOT=$HOME2/anaconda3
 
-## Activate WMLCE virtual environment 
+## Activate WMLCE virtual environment
 source ${CONDA_ROOT}/etc/profile.d/conda.sh
 conda activate $PYTHON_VIRTUAL_ENVIRONMENT
 ulimit -s unlimited
@@ -36,11 +36,11 @@ ulimit -s unlimited
 export NODELIST=nodelist.$
 srun -l bash -c 'hostname' |  sort -k 2 -u | awk -vORS=, '{print $2":4"}' | sed 's/,$//' > $NODELIST
 
-## Number of total processes 
+## Number of total processes
 echo " "
 echo " Nodelist:= " $SLURM_JOB_NODELIST
 echo " Number of nodes:= " $SLURM_JOB_NUM_NODES
-echo " NGPUs per node:= " $SLURM_GPUS_PER_NODE 
+echo " NGPUs per node:= " $SLURM_GPUS_PER_NODE
 echo " Ntasks per node:= "  $SLURM_NTASKS_PER_NODE
 
 
@@ -61,11 +61,11 @@ date
 ###  submit using the command 'sbatch multi_torch.slurm'
 ###  check queuue using command 'squeue'
 ###  cancel jobs using command 'scancel <jobnum>'
-###  outputs are in  multi_torch_<jobnum>.out and multi_torch_<jobnum>.err 
+###  outputs are in  multi_torch_<jobnum>.out and multi_torch_<jobnum>.err
 
 python fid_score_norm.py \
-$HOME2/UNET/results/unet_128_256_eval_1/valid/recon_img.hdf5 $HOME2/UNET/results/unet_128_256_eval_1/valid/real_img.hdf5 \
---batch-size 100 --gpu 0 
+$HOME2/UNET/results/unet_128_256_eval_2/valid/recon_img.hdf5 $HOME2/UNET/results/unet_128_256_eval_2/valid/real_img.hdf5 \
+--batch-size 100 --gpu 0
 
 echo "Run completed at:- "
 date
